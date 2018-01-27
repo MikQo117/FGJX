@@ -6,6 +6,8 @@ public class SignalEffect : MonoBehaviour
 {
     [SerializeField]
     private float moveEndpointOffset;
+    [SerializeField]
+    private float textureScrollSpeed;
 
     private TargetObjectManager tm;
     private GamelogicManager gm;
@@ -20,6 +22,7 @@ public class SignalEffect : MonoBehaviour
     private bool isMoving = false;
     private bool isInitilaized = false;
     private TargetClickZone zone = null;
+    private Vector2 textureScroll = Vector2.zero;
 
     public void BeginMove(Vector3 start, TargetObject target)
     {
@@ -48,6 +51,8 @@ public class SignalEffect : MonoBehaviour
             moveLerp = 1f - (targetObject.GetPos() - (zone.GetAreaUpperLimit() + moveEndpointOffset)) / targetStartGoalDist;
             transform.position = Vector3.Lerp(moveStart, moveEnd, moveLerp);
             lr.SetPositions(new Vector3[] { transform.position, targetObject.transform.position });
+            textureScroll += Vector2.right * textureScrollSpeed * Time.deltaTime;
+            lr.material.SetTextureOffset("_MainTex", textureScroll);
 
             if (moveLerp >= 1f)
             {

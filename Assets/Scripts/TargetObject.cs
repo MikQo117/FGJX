@@ -7,6 +7,11 @@ public class TargetObject : MonoBehaviour
     public int id;
     public Color[] idColors;
     public int scoreValue;
+    public float randomRotationStrenght;
+    public AnimationCurve sizeOverLifetime;
+
+    [SerializeField]
+    private Sprite[] sprites;
 
     private bool isMoving = false;
     private bool isInitilaized = false;
@@ -18,6 +23,7 @@ public class TargetObject : MonoBehaviour
     private Vector3 moveEnd;
     private float moveLerp = 0f;
     private SpriteRenderer sp;
+    private float rotationSpeed;
 
     public delegate void TargetObjectDelegate(object sender);
     public event TargetObjectDelegate EndReached;
@@ -32,27 +38,10 @@ public class TargetObject : MonoBehaviour
         moveStart = start;
         moveEnd = end;
         transform.position = moveStart;
+        rotationSpeed = randomRotationStrenght * (Random.value - 0.5f) * 2f;
         id = Random.Range(0, 3);
-        // Early method for distinguishing different ids
-        sp = GetComponent<SpriteRenderer>();
-        switch (id)
-        {
-            case 0:
-                sp.color = Color.green;
-                break;
-
-            case 1:
-                sp.color = Color.yellow;
-                break;
-
-            case 2:
-                sp.color = Color.red;
-                break;
-
-            default:
-                sp.color = Color.gray;
-                break;
-        }
+        sp = GetComponentInChildren<SpriteRenderer>();
+        sp.sprite = sprites[Random.Range(0, sprites.Length)];
     }
 
     public float GetPos()
@@ -130,6 +119,8 @@ public class TargetObject : MonoBehaviour
         {
             moveLerp += targetObjectManager.targetSpeed * Time.deltaTime;
             transform.position = Vector3.Lerp(moveStart, moveEnd, moveLerp);
+            transform.rotation *= Quaternion.AngleAxis(rotationSpeed * Time.deltaTime, Vector3.forward);
+            transform.localScale = Vector3.one * sizeOverLifetime.Evaluate(moveLerp);
             if (moveLerp >= 1f)
             {
                 isMoving = false;
