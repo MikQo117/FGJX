@@ -12,6 +12,12 @@ public class TargetObject : MonoBehaviour
 
     [SerializeField]
     private Sprite[] sprites;
+    [SerializeField]
+    private Sprite[] icons;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private SpriteRenderer iconRenderer;
 
     private bool isMoving = false;
     private bool isInitilaized = false;
@@ -22,7 +28,6 @@ public class TargetObject : MonoBehaviour
     private Vector3 moveStart;
     private Vector3 moveEnd;
     private float moveLerp = 0f;
-    private SpriteRenderer sp;
     private float rotationSpeed;
 
     public delegate void TargetObjectDelegate(object sender);
@@ -34,14 +39,15 @@ public class TargetObject : MonoBehaviour
             Initialize();
         isMoving = true;
         isClicked = false;
+        spriteRenderer.color = Color.white;
         moveLerp = 0f;
         moveStart = start;
         moveEnd = end;
         transform.position = moveStart;
         rotationSpeed = randomRotationStrenght * (Random.value - 0.5f) * 2f;
         id = Random.Range(0, 3);
-        sp = GetComponentInChildren<SpriteRenderer>();
-        sp.sprite = sprites[Random.Range(0, sprites.Length)];
+        spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
+        iconRenderer.sprite = icons[id];
     }
 
     public float GetPos()
@@ -58,7 +64,7 @@ public class TargetObject : MonoBehaviour
     {
         if (value)
         {
-            sp.color = Color.gray;
+            spriteRenderer.color = Color.gray;
             TargetObject[] signalTargets = FindClosestTargets(100f, 0.6f, 0.1f, 3);
             for (int i = 0; i < signalTargets.Length; i++)
             {

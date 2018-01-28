@@ -43,8 +43,9 @@ public class TargetClickZone : MonoBehaviour
                     if (target.id == id && target.GetIsClicked() != true)
                     {
                         target.SetIsClicked(true);
-                        ClickEffect obj = objectPool.GetItem(clickEffect, target.transform).GetComponent<ClickEffect>();
-                        obj.Play();
+                        ClickEffect obj = objectPool.GetItem(clickEffect, null).GetComponent<ClickEffect>();
+                        obj.transform.localPosition = Vector3.zero;
+                        obj.Play(target.transform);
                         return true;
                     }
                 }

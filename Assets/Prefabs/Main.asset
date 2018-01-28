@@ -18,3 +18,6 @@ MonoBehaviour:
   - prefab: {fileID: 1976437755864460, guid: da51a6ccd37d5e74c9d20e7248d2093e, type: 2}
     name: signal
     count: 15
+  - prefab: {fileID: 1122440430029468, guid: ae2ba38107cefc749838e5a4156bf958, type: 2}
+    name: clickeffect
+    count: 10
