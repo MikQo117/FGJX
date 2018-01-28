@@ -63,7 +63,7 @@ public class TargetObject : MonoBehaviour
             for (int i = 0; i < signalTargets.Length; i++)
             {
                 SignalEffect signalEffect = poolManager.GetItem("signal", transform.parent).GetComponent<SignalEffect>();
-                signalEffect.BeginMove(transform.position, signalTargets[i]);
+                signalEffect.Play(transform.position, signalTargets[i]);
             } 
         }
         isClicked = value;

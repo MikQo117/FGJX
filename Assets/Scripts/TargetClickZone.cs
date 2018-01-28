@@ -13,15 +13,20 @@ public class TargetClickZone : MonoBehaviour
     [Range(0f, 1f)]
     private float areaLowerLimit;
 
+    [SerializeField]
+    private string clickEffect;
+
     /*public delegate void TargetClickZoneEvent();
     public event TargetClickZoneEvent ValidClick;
     public event TargetClickZoneEvent InvalidClick;*/
 
     private TargetObjectManager targetObjectManager;
+    private ObjectPool objectPool;
 
     private void Awake()
     {
         targetObjectManager = FindObjectOfType<TargetObjectManager>();
+        objectPool = FindObjectOfType<ObjectPool>();
     }
 
     public bool Click(out TargetObject target)
@@ -38,6 +43,8 @@ public class TargetClickZone : MonoBehaviour
                     if (target.id == id && target.GetIsClicked() != true)
                     {
                         target.SetIsClicked(true);
+                        ClickEffect obj = objectPool.GetItem(clickEffect, target.transform).GetComponent<ClickEffect>();
+                        obj.Play();
                         return true;
                     }
                 }

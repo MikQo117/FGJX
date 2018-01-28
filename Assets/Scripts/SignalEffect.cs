@@ -24,7 +24,7 @@ public class SignalEffect : MonoBehaviour
     private TargetClickZone zone = null;
     private Vector2 textureScroll = Vector2.zero;
 
-    public void BeginMove(Vector3 start, TargetObject target)
+    public void Play(Vector3 start, TargetObject target)
     {
         if (!isInitilaized)
             Initialize();

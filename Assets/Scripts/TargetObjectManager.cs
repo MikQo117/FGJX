@@ -8,11 +8,15 @@ public class TargetObjectManager : MonoBehaviour
     public float targetSpeed;
     public float spawnInterval;
     public float spawnDistance;
+    public float speedUpPercentDuringMinute;
 
     [SerializeField]
     private string targetPrefab;
     private float spawnTimer = 0f;
     private ObjectPool objectPool;
+
+    public delegate void TargetObjectManagerDelegate(object sender);
+    public event TargetObjectManagerDelegate FailedToClickInTime;
 
     private void Awake()
     {
@@ -29,7 +33,8 @@ public class TargetObjectManager : MonoBehaviour
         spawnTimer -= Time.deltaTime;
         if (spawnTimer <= 0f)
         {
-            spawnTimer = spawnInterval + spawnTimer;
+            // Base time
+            spawnTimer = (spawnInterval + spawnTimer) / (1 + (Time.timeSinceLevelLoad / 60) * (speedUpPercentDuringMinute / 100));
             // Logic for determining spawn position. Currently completely random.
             Vector3 spawnPos = spawnDistance * Random.insideUnitCircle.normalized;
             TargetObject target = objectPool.GetItem(targetPrefab, transform).GetComponent<TargetObject>();
@@ -42,6 +47,10 @@ public class TargetObjectManager : MonoBehaviour
     private void TargetPathEndReached(object sender)
     {
         TargetObject obj = (TargetObject)sender;
+        if (!obj.GetIsClicked())
+        {
+            FailedToClickInTime.Invoke(this);
+        }
         obj.EndReached -= TargetPathEndReached;
         objectPool.ReturnItem(obj.gameObject);
         targets.RemoveAt(0); // Removes at 0 as it is expected that oldest object is first to arrive to end
